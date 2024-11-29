@@ -1,0 +1,27 @@
+services:
+  app:
+    build:
+      context: .
+      args:
+        ENVIRONMENT: dev
+    environment:
+      DEBUG: true
+      RDS_HOSTNAME: host.docker.internal
+      RDS_DB_NAME: cms
+      RDS_USERNAME: postgres
+      RDS_PASSWORD: password
+      RDS_PORT: 5432
+      RDS_ADMIN_SEARCH_PATH: admin,public
+      RDS_CMS_SEARCH_PATH: public
+    ports:
+      - "8000:80"
+
+    develop:
+      watch:
+        - action: sync+restart
+          path: .
+          target: /app
+          ignore:
+            - .venv/
+        - action: rebuild
+          path: ./pyproject.toml
